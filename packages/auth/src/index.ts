@@ -1,9 +1,9 @@
-import { expo } from '@better-auth/expo';
-import { betterAuth, type BetterAuthOptions } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { env } from "cloudflare:workers";
+import { expo } from "@better-auth/expo";
 import { db } from "@kirosumi/db";
 import * as schema from "@kirosumi/db/schema/auth";
-import { env } from "cloudflare:workers";
+import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export const auth = betterAuth<BetterAuthOptions>({
 	database: drizzleAdapter(db, {
@@ -37,5 +37,5 @@ export const auth = betterAuth<BetterAuthOptions>({
 		//   domain: "<your-workers-subdomain>",
 		// },
 	},
-  plugins: [expo()]
+	plugins: [expo()],
 });
