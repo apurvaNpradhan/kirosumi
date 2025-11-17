@@ -1,79 +1,25 @@
-import { QueryClientProvider } from "@tanstack/react-query";
+import "@/global.css";
 
+import { ThemeProvider } from "@react-navigation/native";
+import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
-import {
-	DarkTheme,
-	DefaultTheme,
-	type Theme,
-	ThemeProvider,
-} from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { queryClient } from "@/utils/trpc";
-import { NAV_THEME } from "@/lib/constants";
-import React, { useRef } from "react";
-import { useColorScheme } from "@/lib/use-color-scheme";
-import { Platform, StyleSheet } from "react-native";
-import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
+import { useColorScheme } from "nativewind";
+import { NAV_THEME } from "@/lib/theme";
 
-const LIGHT_THEME: Theme = {
-	...DefaultTheme,
-	colors: NAV_THEME.light,
-};
-const DARK_THEME: Theme = {
-	...DarkTheme,
-	colors: NAV_THEME.dark,
-};
-
-export const unstable_settings = {
-	initialRouteName: "(drawer)",
-};
-
-const useIsomorphicLayoutEffect =
-	Platform.OS === "web" && typeof window === "undefined"
-		? React.useEffect
-		: React.useLayoutEffect;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-});
+export {
+	// Catch any errors thrown by the Layout component.
+	ErrorBoundary,
+} from "expo-router";
 
 export default function RootLayout() {
-	const hasMounted = useRef(false);
-	const { colorScheme, isDarkColorScheme } = useColorScheme();
-	const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-
-	useIsomorphicLayoutEffect(() => {
-		if (hasMounted.current) {
-			return;
-		}
-		setAndroidNavigationBar(colorScheme);
-		setIsColorSchemeLoaded(true);
-		hasMounted.current = true;
-	}, []);
-
-	if (!isColorSchemeLoaded) {
-		return null;
-	}
+	const { colorScheme } = useColorScheme();
 
 	return (
-		<>
-			<QueryClientProvider client={queryClient}>
-				<ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-					<StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-					<GestureHandlerRootView style={styles.container}>
-						<Stack>
-							<Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-							<Stack.Screen
-								name="modal"
-								options={{ title: "Modal", presentation: "modal" }}
-							/>
-						</Stack>
-					</GestureHandlerRootView>
-				</ThemeProvider>
-			</QueryClientProvider>
-		</>
+		<ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
+			<StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+			<Stack />
+			<PortalHost />
+		</ThemeProvider>
 	);
 }

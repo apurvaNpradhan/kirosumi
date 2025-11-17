@@ -1,0 +1,23 @@
+{
+	"name": "@kirosumi/shared",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./src/index.ts"
+		}
+	},
+	"devDependencies": {
+		"typescript": "catalog:"
+	},
+	"license": "ISC",
+	"packageManager": "pnpm@10.22.0",
+	"dependencies": {
+		"nanoid": "^5.1.6"
+	}
+}
