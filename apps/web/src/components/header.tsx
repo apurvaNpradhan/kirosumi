@@ -1,10 +1,15 @@
 import { Link } from "@tanstack/react-router";
+import { ThemeToggle } from "./theme-toggle";
 import UserMenu from "./user-menu";
 
 export default function Header() {
 	const links = [
 		{ to: "/", label: "Home" },
 		{ to: "/dashboard", label: "Dashboard" },
+		{
+			to: "/capture",
+			label: "Capture",
+		},
 	] as const;
 
 	return (
@@ -20,6 +25,7 @@ export default function Header() {
 					})}
 				</nav>
 				<div className="flex items-center gap-2">
+					<ThemeToggle />
 					<UserMenu />
 				</div>
 			</div>

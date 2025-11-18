@@ -48,7 +48,7 @@ export const InsertCapture = createInsertSchema(captures, {
 });
 export type InsertCapture = z.infer<typeof InsertCapture>;
 
-export const UpdateCapture = createUpdateSchema(captures, {}).omit({
+export const UpdateCapture = createUpdateSchema(captures).omit({
 	id: true,
 	createdBy: true,
 	createdAt: true,
