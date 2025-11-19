@@ -1,19 +1,11 @@
 import type { SelectCapture } from "@kirosumi/db/schema/capture";
 import { useMutation } from "@tanstack/react-query";
-import type { JSONContent, TiptapEditorHTMLElement } from "@tiptap/core";
-import {
-	Archive,
-	CheckCircleIcon,
-	Kanban,
-	LucidePaperclip,
-} from "lucide-react";
+import type { JSONContent } from "@tiptap/core";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebouncedCallback } from "use-debounce";
 import DescriptionEditor from "@/components/editor/description-editor";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { queryClient } from "@/router";
 import { useModal } from "@/store/modal.store";
@@ -84,14 +76,14 @@ export default function CaptureItemModal({ data }: Props) {
 	const debouncedUpdateTitle = useDebouncedCallback((value: string) => {
 		if (!data) return;
 		updateMutation.mutate({ id: data.id, title: value });
-	}, 400);
+	}, 600);
 
 	const debouncedUpdateDescription = useDebouncedCallback(
 		(value: JSONContent) => {
 			if (!data) return;
 			updateMutation.mutate({ id: data.id, description: value });
 		},
-		600,
+		900,
 	);
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -125,35 +117,6 @@ export default function CaptureItemModal({ data }: Props) {
 				content={description as JSONContent}
 				onChange={handleDescriptionChange}
 			/>
-
-			<div className="mt-5 flex flex-col space-y-2">
-				<span className="font-medium text-foreground/70 text-sm">
-					Convert to
-				</span>
-				<div className="flex flex-row flex-wrap items-center gap-2">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => openModal("CONVERT_CAPTURE_TO_TASK")}
-					>
-						<CheckCircleIcon className="mr-2 h-4 w-4" />
-						Task
-					</Button>
-					<Button variant="outline" size="sm">
-						<Kanban className="mr-2 h-4 w-4" />
-						Project
-					</Button>
-					<Button variant="outline" size="sm">
-						<LucidePaperclip className="mr-2 h-4 w-4" />
-						Document
-					</Button>
-
-					<Button variant="outline" size="sm">
-						<Archive className="mr-2 h-4 w-4" />
-						Archive
-					</Button>
-				</div>
-			</div>
 		</ScrollArea>
 	);
 }

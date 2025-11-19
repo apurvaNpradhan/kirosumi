@@ -1,4 +1,5 @@
 import type { SelectCapture } from "@kirosumi/db/schema/capture";
+import type { JSONContent } from "@tiptap/core";
 import Fuse from "fuse.js";
 import { ChevronDown, Plus, Search, View, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -18,6 +19,29 @@ import {
 import { useModal } from "@/store/modal.store";
 import { CaptureItem } from "./capture-item";
 
+function extractTextFromTiptap(content: JSONContent): string {
+	if (!content) return "";
+	if (typeof content === "string") return content;
+	let text = "";
+	const extractFromNode = (node: any): void => {
+		if (node.text) {
+			text += node.text + " ";
+		}
+
+		if (node.content && Array.isArray(node.content)) {
+			node.content.forEach(extractFromNode);
+		}
+	};
+
+	if (Array.isArray(content)) {
+		content.forEach(extractFromNode);
+	} else if (content.content) {
+		extractFromNode(content);
+	}
+
+	return text.trim();
+}
+
 export default function CaptureListSection({
 	data,
 }: {
@@ -27,14 +51,30 @@ export default function CaptureListSection({
 	const [search, setSearch] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const { openModal } = useModal();
-	const fuse = new Fuse(data, {
-		keys: ["title", "description"],
-	});
+
+	const fuse = useMemo(() => {
+		const searchableData = data.map((capture) => ({
+			...capture,
+			searchableDescription: extractTextFromTiptap(
+				capture.description as JSONContent,
+			),
+		}));
+
+		return new Fuse(searchableData, {
+			keys: ["title", "searchableDescription"],
+			threshold: 0.3,
+			ignoreLocation: true,
+		});
+	}, [data]);
+
 	const filteredData = useMemo(() => {
 		if (!search.trim()) return data;
 
-		const lowerSearch = search.toLowerCase();
-		return fuse.search(lowerSearch).map((result) => result.item);
+		const results = fuse.search(search);
+		return results.map((result) => {
+			const { searchableDescription, ...originalCapture } = result.item;
+			return originalCapture as SelectCapture;
+		});
 	}, [data, search, fuse]);
 
 	const { today, yesterday, earlier } = useMemo(() => {

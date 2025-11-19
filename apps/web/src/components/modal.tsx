@@ -96,11 +96,11 @@ const Modal: React.FC<Props> = ({
 						"flex flex-col overflow-y-hidden p-0 transition-all duration-200",
 					)}
 				>
-					<DialogHeader className="relative flex flex-shrink-0 flex-row items-center justify-between py-1">
+					<DialogHeader className="relative flex flex-shrink-0 flex-row items-center justify-between px-2">
 						{allowMaximize && (
 							<Button
-								variant="ghost"
 								type="button"
+								variant="ghost"
 								onClick={toggleMaximize}
 								className="z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
 								aria-label={isMaximized ? "Minimize" : "Maximize"}

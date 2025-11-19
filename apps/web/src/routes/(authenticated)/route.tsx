@@ -42,7 +42,8 @@ export const Route = createFileRoute("/(authenticated)")({
 	beforeLoad: async () => {
 		if (typeof window === "undefined") return;
 		const session = await getUser();
-		if (!session?.session) {
+
+		if (!session) {
 			throw redirect({ to: "/login" });
 		}
 

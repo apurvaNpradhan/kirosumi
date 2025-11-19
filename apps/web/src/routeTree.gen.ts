@@ -10,19 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as authenticatedRouteRouteImport } from './routes/(authenticated)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as authenticatedCaptureIndexRouteImport } from './routes/(authenticated)/capture/index'
+import { Route as authenticatedCaptureDashboardRouteImport } from './routes/(authenticated)/capture/dashboard'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authenticatedRouteRoute = authenticatedRouteRouteImport.update({
@@ -40,45 +35,50 @@ const authenticatedCaptureIndexRoute =
     path: '/capture/',
     getParentRoute: () => authenticatedRouteRoute,
   } as any)
+const authenticatedCaptureDashboardRoute =
+  authenticatedCaptureDashboardRouteImport.update({
+    id: '/capture/dashboard',
+    path: '/capture/dashboard',
+    getParentRoute: () => authenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/capture/dashboard': typeof authenticatedCaptureDashboardRoute
   '/capture': typeof authenticatedCaptureIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/capture/dashboard': typeof authenticatedCaptureDashboardRoute
   '/capture': typeof authenticatedCaptureIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(authenticated)': typeof authenticatedRouteRouteWithChildren
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/(authenticated)/capture/dashboard': typeof authenticatedCaptureDashboardRoute
   '/(authenticated)/capture/': typeof authenticatedCaptureIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login' | '/capture'
+  fullPaths: '/' | '/login' | '/capture/dashboard' | '/capture'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/capture'
+  to: '/' | '/login' | '/capture/dashboard' | '/capture'
   id:
     | '__root__'
     | '/'
     | '/(authenticated)'
-    | '/dashboard'
     | '/login'
+    | '/(authenticated)/capture/dashboard'
     | '/(authenticated)/capture/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authenticatedRouteRoute: typeof authenticatedRouteRouteWithChildren
-  DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
 }
 
@@ -89,13 +89,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(authenticated)': {
@@ -119,14 +112,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authenticatedCaptureIndexRouteImport
       parentRoute: typeof authenticatedRouteRoute
     }
+    '/(authenticated)/capture/dashboard': {
+      id: '/(authenticated)/capture/dashboard'
+      path: '/capture/dashboard'
+      fullPath: '/capture/dashboard'
+      preLoaderRoute: typeof authenticatedCaptureDashboardRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
   }
 }
 
 interface authenticatedRouteRouteChildren {
+  authenticatedCaptureDashboardRoute: typeof authenticatedCaptureDashboardRoute
   authenticatedCaptureIndexRoute: typeof authenticatedCaptureIndexRoute
 }
 
 const authenticatedRouteRouteChildren: authenticatedRouteRouteChildren = {
+  authenticatedCaptureDashboardRoute: authenticatedCaptureDashboardRoute,
   authenticatedCaptureIndexRoute: authenticatedCaptureIndexRoute,
 }
 
@@ -136,7 +138,6 @@ const authenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authenticatedRouteRoute: authenticatedRouteRouteWithChildren,
-  DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
