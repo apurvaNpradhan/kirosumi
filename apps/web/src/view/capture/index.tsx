@@ -18,7 +18,7 @@ export default function CapturePage() {
 	const { data = [], isPending } = useQuery(trpc.capture.all.queryOptions());
 	if (isPending) {
 		return (
-			<div className="flex h-64 items-center justify-center">
+			<div className="flex items-center justify-center">
 				<Spinner />
 			</div>
 		);

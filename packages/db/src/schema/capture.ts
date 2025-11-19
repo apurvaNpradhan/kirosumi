@@ -1,9 +1,17 @@
 import { relations } from "drizzle-orm";
-import { bigserial, index, pgTable, text, varchar } from "drizzle-orm/pg-core";
+import {
+	bigserial,
+	index,
+	json,
+	pgTable,
+	text,
+	varchar,
+} from "drizzle-orm/pg-core";
 import {
 	createInsertSchema,
 	createSelectSchema,
 	createUpdateSchema,
+	type Json,
 } from "drizzle-zod";
 import z from "zod";
 import { timestamps } from "../utils/reusable";
@@ -14,7 +22,7 @@ export const captures = pgTable(
 	{
 		id: bigserial("id", { mode: "number" }).primaryKey(),
 		title: varchar("title", { length: 255 }).notNull(),
-		description: text("content"),
+		description: json("content").$type<Json>(),
 		createdBy: text("createdBy")
 			.references(() => user.id, { onDelete: "cascade" })
 			.notNull(),
@@ -54,3 +62,20 @@ export const UpdateCapture = createUpdateSchema(captures).omit({
 	createdAt: true,
 });
 export type UpdateCapture = z.infer<typeof UpdateCapture>;
+
+type JSONContent = {
+	type?: string;
+
+	attrs?: Record<string, any> | undefined;
+
+	content?: JSONContent[];
+
+	marks?: {
+		type: string;
+
+		attrs?: Record<string, any>;
+		[key: string]: any;
+	}[];
+	text?: string;
+	[key: string]: any;
+};

@@ -164,7 +164,7 @@ export default function CaptureListSection({
 			{view === "List" ? (
 				<div className="space-y-2">
 					{filteredData.map((capture) => (
-						<CaptureItem key={capture.id} capture={capture} />
+						<CaptureItem key={capture.id} capture={capture} view="List" />
 					))}
 				</div>
 			) : (
@@ -176,7 +176,7 @@ export default function CaptureListSection({
 							</h3>
 							<div className="space-y-2 border-primary/20 border-l-2 pl-4">
 								{today.map((c) => (
-									<CaptureItem key={c.id} capture={c} />
+									<CaptureItem key={c.id} capture={c} view="Timeline" />
 								))}
 							</div>
 						</section>
@@ -189,7 +189,7 @@ export default function CaptureListSection({
 							</h3>
 							<div className="space-y-2 border-primary/20 border-l-2 pl-4">
 								{yesterday.map((c) => (
-									<CaptureItem key={c.id} capture={c} />
+									<CaptureItem key={c.id} capture={c} view="Timeline" />
 								))}
 							</div>
 						</section>
@@ -202,7 +202,7 @@ export default function CaptureListSection({
 							</h3>
 							<div className="space-y-2 border-primary/20 border-l-2 pl-4">
 								{earlier.map((c) => (
-									<CaptureItem key={c.id} capture={c} />
+									<CaptureItem key={c.id} capture={c} view="Timeline" />
 								))}
 							</div>
 						</section>

@@ -1,7 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-const ModalContentTypes = ["CREATE_CAPTURE", "CAPTURE_DETAILS", null] as const;
+const ModalContentTypes = [
+	"CREATE_CAPTURE",
+	"CAPTURE_DETAILS",
+	"CONVERT_CAPTURE_TO_TASK",
+	null,
+] as const;
 type ModalContentType = (typeof ModalContentTypes)[number];
 
 interface ModalState {

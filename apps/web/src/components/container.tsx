@@ -16,7 +16,7 @@ const Container = ({
 	return (
 		<div
 			className={cn(
-				"flex flex-1 flex-col space-y-5 px-4 sm:px-6 lg:px-8",
+				"flex flex-1 flex-col",
 
 				variant === "center" && "mx-auto mt-10 w-full max-w-4xl lg:mt-20",
 				variant === "full" && "w-full",

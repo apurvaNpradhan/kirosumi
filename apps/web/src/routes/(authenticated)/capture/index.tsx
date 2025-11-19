@@ -8,7 +8,7 @@ export const Route = createFileRoute("/(authenticated)/capture/")({
 
 function RouteComponent() {
 	return (
-		<Container>
+		<Container className="px-2">
 			<CapturePage />
 		</Container>
 	);

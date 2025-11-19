@@ -1,5 +1,6 @@
 import type { SelectCapture } from "@kirosumi/db/schema/capture";
 import { useMutation } from "@tanstack/react-query";
+import type { JSONContent, TiptapEditorHTMLElement } from "@tiptap/core";
 import {
 	Archive,
 	CheckCircleIcon,
@@ -9,10 +10,13 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebouncedCallback } from "use-debounce";
+import DescriptionEditor from "@/components/editor/description-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { queryClient } from "@/router";
+import { useModal } from "@/store/modal.store";
 import { useTRPC } from "@/utils/trpc";
 
 interface Props {
@@ -20,6 +24,7 @@ interface Props {
 }
 
 export default function CaptureItemModal({ data }: Props) {
+	const { openModal } = useModal();
 	const trpc = useTRPC();
 
 	const [title, setTitle] = useState(data?.title ?? "");
@@ -81,23 +86,26 @@ export default function CaptureItemModal({ data }: Props) {
 		updateMutation.mutate({ id: data.id, title: value });
 	}, 400);
 
-	const debouncedUpdateDescription = useDebouncedCallback((value: string) => {
-		if (!data) return;
-		updateMutation.mutate({ id: data.id, description: value });
-	}, 600);
+	const debouncedUpdateDescription = useDebouncedCallback(
+		(value: JSONContent) => {
+			if (!data) return;
+			updateMutation.mutate({ id: data.id, description: value });
+		},
+		600,
+	);
 
-	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const value = e.target.value;
 		setTitle(value);
 		debouncedUpdateTitle(value);
 	};
 
 	const handleDescriptionChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement>,
+		// e: React.ChangeEvent<TiptapEditorHTMLElement>,
+		description: JSONContent,
 	) => {
-		const value = e.target.value;
-		setDescription(value);
-		debouncedUpdateDescription(value);
+		setDescription(description);
+		debouncedUpdateDescription(description);
 	};
 
 	if (!data) {
@@ -105,20 +113,17 @@ export default function CaptureItemModal({ data }: Props) {
 	}
 
 	return (
-		<div className="flex flex-col space-y-2 px-6 pb-2">
-			<Input
+		<ScrollArea className="flex h-full flex-col space-y-2 overflow-y-hidden px-6 pb-2">
+			<Textarea
 				value={title}
 				onChange={handleTitleChange}
-				className="h-auto border-0 p-0 font-bold text-xl shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 md:text-xl dark:bg-transparent"
+				className="h-auto resize-none border-0 p-0 font-bold text-xl shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 md:text-xl dark:bg-transparent"
 				placeholder="Untitled"
 			/>
 
-			<Textarea
-				value={description}
+			<DescriptionEditor
+				content={description as JSONContent}
 				onChange={handleDescriptionChange}
-				className="resize-none border-0 p-0 text-muted-foreground text-sm leading-relaxed shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-transparent"
-				placeholder="Add a description..."
-				rows={4}
 			/>
 
 			<div className="mt-5 flex flex-col space-y-2">
@@ -126,7 +131,11 @@ export default function CaptureItemModal({ data }: Props) {
 					Convert to
 				</span>
 				<div className="flex flex-row flex-wrap items-center gap-2">
-					<Button variant="outline" size="sm">
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => openModal("CONVERT_CAPTURE_TO_TASK")}
+					>
 						<CheckCircleIcon className="mr-2 h-4 w-4" />
 						Task
 					</Button>
@@ -145,6 +154,6 @@ export default function CaptureItemModal({ data }: Props) {
 					</Button>
 				</div>
 			</div>
-		</div>
+		</ScrollArea>
 	);
 }

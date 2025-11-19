@@ -1,5 +1,6 @@
 import type { SelectCapture } from "@kirosumi/db/schema/capture";
 import { useMutation } from "@tanstack/react-query";
+import type { JSONContent } from "@tiptap/core";
 import { format, isToday, isYesterday } from "date-fns";
 import {
 	Archive,
@@ -23,7 +24,13 @@ import { useCaptureStore } from "@/store/capture.store";
 import { useModal } from "@/store/modal.store";
 import { useTRPC } from "@/utils/trpc";
 
-export function CaptureItem({ capture }: { capture: SelectCapture }) {
+export function CaptureItem({
+	capture,
+	view,
+}: {
+	capture: SelectCapture;
+	view?: "List" | "Timeline";
+}) {
 	const { setCurrentCapture } = useCaptureStore();
 	const { openModal } = useModal();
 
@@ -78,11 +85,13 @@ export function CaptureItem({ capture }: { capture: SelectCapture }) {
 					{capture.title}
 				</h3>
 				{capture.description && (
-					<p className="line-clamp-2 text-muted-foreground text-sm">
-						{capture.description}
+					<p className="text-muted-foreground text-xs">
+						{getReadableDescription(capture.description as JSONContent)}
 					</p>
 				)}
-				<TimeAgo date={capture.updatedAt ?? capture.createdAt} />
+				{view === "List" && (
+					<TimeAgo date={capture.updatedAt ?? capture.createdAt} />
+				)}
 			</div>
 
 			<DropdownMenu>
@@ -148,4 +157,33 @@ function TimeAgo({ date }: { date: string | Date }) {
 			{format(d, "MMM d, yyyy")}
 		</span>
 	);
+}
+
+function getReadableDescription(
+	json: JSONContent | null | undefined,
+	maxLength = 200,
+): string {
+	if (!json) return "";
+
+	const content = (json as any)?.json?.content || json.content || [];
+
+	let result = "";
+
+	function extractTextFromNode(node: JSONContent): string {
+		if (!node) return "";
+		if (node.type === "text") {
+			return node.text || "";
+		}
+		if (node.content && Array.isArray(node.content)) {
+			return node.content.map(extractTextFromNode).join("");
+		}
+		return "";
+	}
+	if (!result) {
+		result = extractTextFromNode({ content });
+	}
+	const clean = result.replace(/\s+/g, " ").trim();
+
+	if (clean.length <= maxLength) return clean;
+	return clean.slice(0, maxLength).replace(/\s+\S*$/, "") + "…";
 }

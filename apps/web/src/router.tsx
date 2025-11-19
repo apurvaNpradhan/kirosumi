@@ -53,6 +53,7 @@ export const getRouter = () => {
 		routeTree,
 		scrollRestoration: true,
 		defaultPreloadStaleTime: 0,
+		defaultPreload: "intent",
 		context: { trpc, queryClient },
 		defaultPendingComponent: () => <Loader />,
 		defaultNotFoundComponent: () => <div>Not Found</div>,
