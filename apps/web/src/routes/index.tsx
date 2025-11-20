@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Header from "@/components/header";
-import { useTRPC } from "@/utils/trpc";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,

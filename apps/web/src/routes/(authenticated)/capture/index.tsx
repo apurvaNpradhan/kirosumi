@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Container from "@/components/container";
+import Container from "@/components/layouts/container";
 import CapturePage from "@/view/capture";
 
 export const Route = createFileRoute("/(authenticated)/capture/")({

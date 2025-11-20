@@ -62,20 +62,3 @@ export const UpdateCapture = createUpdateSchema(captures).omit({
 	createdAt: true,
 });
 export type UpdateCapture = z.infer<typeof UpdateCapture>;
-
-type JSONContent = {
-	type?: string;
-
-	attrs?: Record<string, any> | undefined;
-
-	content?: JSONContent[];
-
-	marks?: {
-		type: string;
-
-		attrs?: Record<string, any>;
-		[key: string]: any;
-	}[];
-	text?: string;
-	[key: string]: any;
-};

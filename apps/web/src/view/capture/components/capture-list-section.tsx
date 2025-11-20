@@ -25,7 +25,7 @@ function extractTextFromTiptap(content: JSONContent): string {
 	let text = "";
 	const extractFromNode = (node: any): void => {
 		if (node.text) {
-			text += node.text + " ";
+			text += `${node.text} `;
 		}
 
 		if (node.content && Array.isArray(node.content)) {

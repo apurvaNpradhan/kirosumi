@@ -185,5 +185,5 @@ function getReadableDescription(
 	const clean = result.replace(/\s+/g, " ").trim();
 
 	if (clean.length <= maxLength) return clean;
-	return clean.slice(0, maxLength).replace(/\s+\S*$/, "") + "…";
+	return `${clean.slice(0, maxLength).replace(/\s+\S*$/, "")}…`;
 }

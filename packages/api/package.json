@@ -28,6 +28,7 @@
 		"dotenv": "catalog:",
 		"zod": "catalog:",
 		"@kirosumi/auth": "workspace:*",
-		"@kirosumi/db": "workspace:*"
+		"@kirosumi/db": "workspace:*",
+		"@kirosumi/shared": "workspace:*"
 	}
 }

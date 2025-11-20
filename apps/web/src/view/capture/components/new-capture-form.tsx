@@ -1,4 +1,3 @@
-import { InsertCapture } from "@kirosumi/db/schema/capture";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { JSONContent } from "@tiptap/core";
 import { ListFilterIcon } from "lucide-react";

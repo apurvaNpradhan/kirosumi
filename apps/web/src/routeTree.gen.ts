@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as authenticatedRouteRouteImport } from './routes/(authenticated)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as authenticatedDashboardRouteImport } from './routes/(authenticated)/dashboard'
+import { Route as authenticatedSpacesIndexRouteImport } from './routes/(authenticated)/spaces/index'
+import { Route as authenticatedInboxIndexRouteImport } from './routes/(authenticated)/inbox/index'
 import { Route as authenticatedCaptureIndexRouteImport } from './routes/(authenticated)/capture/index'
-import { Route as authenticatedCaptureDashboardRouteImport } from './routes/(authenticated)/capture/dashboard'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -29,51 +31,69 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authenticatedDashboardRoute = authenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => authenticatedRouteRoute,
+} as any)
+const authenticatedSpacesIndexRoute =
+  authenticatedSpacesIndexRouteImport.update({
+    id: '/spaces/',
+    path: '/spaces/',
+    getParentRoute: () => authenticatedRouteRoute,
+  } as any)
+const authenticatedInboxIndexRoute = authenticatedInboxIndexRouteImport.update({
+  id: '/inbox/',
+  path: '/inbox/',
+  getParentRoute: () => authenticatedRouteRoute,
+} as any)
 const authenticatedCaptureIndexRoute =
   authenticatedCaptureIndexRouteImport.update({
     id: '/capture/',
     path: '/capture/',
     getParentRoute: () => authenticatedRouteRoute,
   } as any)
-const authenticatedCaptureDashboardRoute =
-  authenticatedCaptureDashboardRouteImport.update({
-    id: '/capture/dashboard',
-    path: '/capture/dashboard',
-    getParentRoute: () => authenticatedRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/capture/dashboard': typeof authenticatedCaptureDashboardRoute
+  '/dashboard': typeof authenticatedDashboardRoute
   '/capture': typeof authenticatedCaptureIndexRoute
+  '/inbox': typeof authenticatedInboxIndexRoute
+  '/spaces': typeof authenticatedSpacesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/capture/dashboard': typeof authenticatedCaptureDashboardRoute
+  '/dashboard': typeof authenticatedDashboardRoute
   '/capture': typeof authenticatedCaptureIndexRoute
+  '/inbox': typeof authenticatedInboxIndexRoute
+  '/spaces': typeof authenticatedSpacesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(authenticated)': typeof authenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/(authenticated)/capture/dashboard': typeof authenticatedCaptureDashboardRoute
+  '/(authenticated)/dashboard': typeof authenticatedDashboardRoute
   '/(authenticated)/capture/': typeof authenticatedCaptureIndexRoute
+  '/(authenticated)/inbox/': typeof authenticatedInboxIndexRoute
+  '/(authenticated)/spaces/': typeof authenticatedSpacesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/capture/dashboard' | '/capture'
+  fullPaths: '/' | '/login' | '/dashboard' | '/capture' | '/inbox' | '/spaces'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/capture/dashboard' | '/capture'
+  to: '/' | '/login' | '/dashboard' | '/capture' | '/inbox' | '/spaces'
   id:
     | '__root__'
     | '/'
     | '/(authenticated)'
     | '/login'
-    | '/(authenticated)/capture/dashboard'
+    | '/(authenticated)/dashboard'
     | '/(authenticated)/capture/'
+    | '/(authenticated)/inbox/'
+    | '/(authenticated)/spaces/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -105,6 +125,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(authenticated)/dashboard': {
+      id: '/(authenticated)/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof authenticatedDashboardRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
+    '/(authenticated)/spaces/': {
+      id: '/(authenticated)/spaces/'
+      path: '/spaces'
+      fullPath: '/spaces'
+      preLoaderRoute: typeof authenticatedSpacesIndexRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
+    '/(authenticated)/inbox/': {
+      id: '/(authenticated)/inbox/'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof authenticatedInboxIndexRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
     '/(authenticated)/capture/': {
       id: '/(authenticated)/capture/'
       path: '/capture'
@@ -112,24 +153,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authenticatedCaptureIndexRouteImport
       parentRoute: typeof authenticatedRouteRoute
     }
-    '/(authenticated)/capture/dashboard': {
-      id: '/(authenticated)/capture/dashboard'
-      path: '/capture/dashboard'
-      fullPath: '/capture/dashboard'
-      preLoaderRoute: typeof authenticatedCaptureDashboardRouteImport
-      parentRoute: typeof authenticatedRouteRoute
-    }
   }
 }
 
 interface authenticatedRouteRouteChildren {
-  authenticatedCaptureDashboardRoute: typeof authenticatedCaptureDashboardRoute
+  authenticatedDashboardRoute: typeof authenticatedDashboardRoute
   authenticatedCaptureIndexRoute: typeof authenticatedCaptureIndexRoute
+  authenticatedInboxIndexRoute: typeof authenticatedInboxIndexRoute
+  authenticatedSpacesIndexRoute: typeof authenticatedSpacesIndexRoute
 }
 
 const authenticatedRouteRouteChildren: authenticatedRouteRouteChildren = {
-  authenticatedCaptureDashboardRoute: authenticatedCaptureDashboardRoute,
+  authenticatedDashboardRoute: authenticatedDashboardRoute,
   authenticatedCaptureIndexRoute: authenticatedCaptureIndexRoute,
+  authenticatedInboxIndexRoute: authenticatedInboxIndexRoute,
+  authenticatedSpacesIndexRoute: authenticatedSpacesIndexRoute,
 }
 
 const authenticatedRouteRouteWithChildren =

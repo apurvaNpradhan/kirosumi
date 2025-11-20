@@ -1,16 +1,9 @@
 import { Maximize2, Minimize2 } from "lucide-react";
-import { VisuallyHidden } from "radix-ui";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useModal } from "@/store/modal.store";
 import { Button } from "./ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 
 interface Props {
 	children: React.ReactNode;

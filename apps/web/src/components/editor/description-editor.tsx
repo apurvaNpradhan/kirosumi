@@ -2,9 +2,7 @@ import "./tiptap.css";
 import type { Editor, JSONContent } from "@/components/editor";
 import {
 	EditorBubbleMenu,
-	EditorCharacterCount,
 	EditorClearFormatting,
-	EditorFloatingMenu,
 	EditorFormatBold,
 	EditorFormatCode,
 	EditorFormatItalic,
@@ -20,7 +18,6 @@ import {
 	EditorNodeHeading3,
 	EditorNodeOrderedList,
 	EditorNodeQuote,
-	EditorNodeTable,
 	EditorNodeTaskList,
 	EditorNodeText,
 	EditorProvider,

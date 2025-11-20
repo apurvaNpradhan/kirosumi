@@ -37,6 +37,7 @@
 	},
 	"dependencies": {
 		"@neondatabase/serverless": "^1.0.1",
+		"@kirosumi/shared": "workspace:*",
 		"dotenv": "catalog:",
 		"drizzle-orm": "^0.44.2",
 		"drizzle-zod": "^0.8.3",

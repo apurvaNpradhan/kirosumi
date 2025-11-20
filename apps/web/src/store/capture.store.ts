@@ -8,7 +8,7 @@ interface CaptureStore {
 }
 
 export const useCaptureStore = create<CaptureStore>()(
-	devtools((set, get) => ({
+	devtools((set, _get) => ({
 		currentCapture: null,
 		setCurrentCapture: (capture: SelectCapture) =>
 			set({ currentCapture: capture }),

@@ -8,14 +8,9 @@ import {
 	Ellipsis,
 	Kanban,
 	LucidePaperclip,
-	Maximize,
-	Pencil,
-	Trash,
 } from "lucide-react";
 import { toast } from "sonner";
-import Header from "@/components/header";
 import Modal from "@/components/modal";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -28,7 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getUser } from "@/functions/get-user";
 import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/router";
 import { useCaptureStore } from "@/store/capture.store";
@@ -41,12 +35,13 @@ export const Route = createFileRoute("/(authenticated)")({
 	component: RouteComponent,
 	beforeLoad: async () => {
 		if (typeof window === "undefined") return;
-		const session = await getUser();
+		const session = await authClient.getSession();
 
 		if (!session) {
 			throw redirect({ to: "/login" });
 		}
 
+		console.log(session);
 		return { session };
 	},
 });
@@ -103,10 +98,7 @@ function RouteComponent() {
 	};
 	return (
 		<>
-			<div className="flex h-screen flex-col">
-				<Header />
-				<Outlet />
-			</div>
+			<Outlet />
 			{RenderModalContent()}
 		</>
 	);
@@ -124,7 +116,7 @@ function ConvertToTaskModalHeader({ capture }: { capture: SelectCapture }) {
 		</DialogHeader>
 	);
 }
-function NewCaptureHeader() {
+function _NewCaptureHeader() {
 	return (
 		<DialogHeader className="px-6 pt-4">
 			<DialogTitle>New Capture</DialogTitle>

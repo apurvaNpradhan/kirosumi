@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useTRPC } from "@/utils/trpc";
 
-export const Route = createFileRoute("/(authenticated)/capture/dashboard")({
+export const Route = createFileRoute("/(authenticated)/dashboard")({
 	component: RouteComponent,
 });
 

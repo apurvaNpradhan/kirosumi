@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
+import { useTRPCClient } from "@/utils/trpc";
 import Loader from "./loader";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -17,7 +18,7 @@ export default function SignUpForm({
 		from: "/",
 	});
 	const { isPending } = authClient.useSession();
-
+	const trpc = useTRPCClient();
 	const form = useForm({
 		defaultValues: {
 			email: "",
@@ -32,11 +33,17 @@ export default function SignUpForm({
 					name: value.name,
 				},
 				{
-					onSuccess: () => {
-						navigate({
-							to: "/dashboard",
-						});
-						toast.success("Sign up successful");
+					onSuccess: async (_user) => {
+						try {
+							await trpc.space.creatDefaultSpace.mutate();
+							toast.success("Welcome! Your space is ready 🎉");
+							navigate({ to: "/inbox" });
+						} catch (error: any) {
+							toast.error(
+								"Almost there! Failed to set up your workspace. Please try again.",
+							);
+							console.error("Onboarding failed:", error);
+						}
 					},
 					onError: (error) => {
 						toast.error(error.error.message || error.error.statusText);
