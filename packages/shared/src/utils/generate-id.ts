@@ -9,5 +9,6 @@ export const publicIds = {
 	capture: () => `CAP-${generateId()}`,
 	space: () => `SPA-${generateId()}`,
 	status: () => `ST-${generateId()}`,
+	item: () => `ITEM-${generateId()}`,
 	prefix: (prefix: string) => `${prefix}-${generateId()}`,
 };

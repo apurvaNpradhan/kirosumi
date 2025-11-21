@@ -18,7 +18,7 @@ const Container = ({
 			className={cn(
 				"flex flex-1 flex-col",
 
-				variant === "center" && "mx-auto mt-10 w-full max-w-4xl lg:mt-20",
+				variant === "center" && "mx-auto mt-10 w-full max-w-4xl",
 				variant === "full" && "w-full",
 
 				className,

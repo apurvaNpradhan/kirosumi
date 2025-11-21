@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { PiIcon } from "lucide-react";
+import { type PiIcon, Search } from "lucide-react";
 import { useIsRouteActive } from "@/utils/is-route-active";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 

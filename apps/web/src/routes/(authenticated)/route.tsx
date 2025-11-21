@@ -1,5 +1,5 @@
 import type { SelectCapture } from "@kirosumi/db/schema/capture";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import {
 	Archive,
@@ -30,6 +30,7 @@ import { useModal } from "@/store/modal.store";
 import { useTRPC } from "@/utils/trpc";
 import CaptureItemModal from "@/view/capture/components/capture-item-modal";
 import NewCaptureForm from "@/view/capture/components/new-capture-form";
+import NewScratchForm from "@/view/scratchpad/components/new-scratchpad-form";
 
 export const Route = createFileRoute("/(authenticated)")({
 	component: RouteComponent,
@@ -48,49 +49,34 @@ export const Route = createFileRoute("/(authenticated)")({
 
 function RouteComponent() {
 	const { modalContentType, isOpen, closeModals, closeModal } = useModal();
-	const { currentCapture, setCurrentCapture } = useCaptureStore();
+	const { currentItem, setCurrentItem } = useItemStore();
+	const trpc = useTRPC();
+	const { data } = useQuery(trpc.space.all.queryOptions());
 	const RenderModalContent = () => {
 		return (
 			<>
 				<Modal
-					isVisible={isOpen && modalContentType === "CREATE_CAPTURE"}
+					isVisible={isOpen && modalContentType === "CREATE_SCRATCH"}
 					headerShown={false}
 					closeOnClickOutside={true}
 					modalSize="lg"
 					allowMaximize={false}
 				>
-					<NewCaptureForm />
+					<NewScratchForm />
 				</Modal>
 				<Modal
-					header={<CaptureDetailModalHeader />}
-					modalSize="lg"
-					onClose={() => setCurrentCapture(null)}
-					isVisible={isOpen && modalContentType === "CAPTURE_DETAILS"}
-					closeOnClickOutside={true}
-				>
-					<CaptureItemModal data={currentCapture} />
-				</Modal>
-				<Modal
+					isVisible={isOpen && modalContentType === "SCRATCH_DETAILS"}
+					dialogHeader={{
+						title: `${currentItem?.name}'s detail`,
+						description: "View and edit the details of this scratchpad",
+					}}
 					closeOnClickOutside={true}
 					modalSize="lg"
-					isVisible={isOpen && modalContentType === "CONVERT_CAPTURE_TO_TASK"}
-					header={<ConvertToTaskModalHeader capture={currentCapture} />}
+					allowMaximize={false}
+					onClose={() => setCurrentItem(null)}
 				>
-					<div className="flex flex-col space-y-2 px-6 pb-2">
-						<div className="flex flex-col justify-start gap-2">
-							<Label>Task Name</Label>
-							<Input defaultValue={currentCapture?.title} className="w-full" />
-						</div>
-						<Button
-							className=""
-							variant={"ghost"}
-							onClick={() => closeModals(2)}
-						>
-							Close
-						</Button>
-						<Button variant="outline" size="sm" onClick={() => closeModals(2)}>
-							On Submit
-						</Button>
+					<div>
+						<ScratchDetail data={currentItem} />
 					</div>
 				</Modal>
 			</>
@@ -196,5 +182,45 @@ function CaptureDetailModalHeader() {
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>
+	);
+}
+
+import type { SelectSpace } from "@kirosumi/db/schema/space";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { useItemStore } from "@/store/item.store";
+import ScratchDetail from "@/view/scratchpad/components/scratch-detail";
+
+export default function ProjectSelect({
+	data,
+	onChange,
+}: {
+	data: SelectSpace[];
+	onChange: (value: string) => void;
+}) {
+	const defaultProject = data?.find((p) => p.isDefault);
+
+	return (
+		<Select
+			defaultValue={defaultProject?.publicId}
+			onValueChange={(value) => onChange(value)}
+		>
+			<SelectTrigger className="w-[200px]">
+				<SelectValue placeholder="Select Project" />
+			</SelectTrigger>
+
+			<SelectContent>
+				{data?.map((p) => (
+					<SelectItem key={p.publicId} value={p.publicId}>
+						{p.name}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
 	);
 }

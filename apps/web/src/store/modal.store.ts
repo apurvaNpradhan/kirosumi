@@ -5,6 +5,8 @@ const ModalContentTypes = [
 	"CREATE_CAPTURE",
 	"CAPTURE_DETAILS",
 	"CONVERT_CAPTURE_TO_TASK",
+	"CREATE_SCRATCH",
+	"SCRATCH_DETAILS",
 	null,
 ] as const;
 type ModalContentType = (typeof ModalContentTypes)[number];

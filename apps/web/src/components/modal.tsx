@@ -1,9 +1,10 @@
+import { Description } from "@radix-ui/react-dialog";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useModal } from "@/store/modal.store";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 interface Props {
 	children: React.ReactNode;
@@ -89,6 +90,10 @@ const Modal: React.FC<Props> = ({
 						"flex flex-col overflow-y-hidden p-0 transition-all duration-200",
 					)}
 				>
+					<DialogTitle className="sr-only">{dialogHeader.title}</DialogTitle>
+					<Description className="sr-only">
+						{dialogHeader.description}
+					</Description>
 					<DialogHeader className="relative flex flex-shrink-0 flex-row items-center justify-between px-2">
 						{allowMaximize && (
 							<Button

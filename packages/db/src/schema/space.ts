@@ -15,13 +15,15 @@ import {
 import z from "zod";
 import { timestamps } from "../utils/reusable";
 import { user } from "./auth";
+import { items } from "./item";
+import { projects } from "./project";
 import { statuses } from "./status";
 
 export const spaces = pgTable(
 	"spaces",
 	{
 		id: bigserial("id", { mode: "number" }).primaryKey(),
-		publicId: varchar("public_id").notNull(),
+		publicId: varchar("public_id").notNull().unique(),
 		userId: varchar("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
@@ -47,12 +49,14 @@ export const SpaceRelation = relations(spaces, ({ one, many }) => ({
 		relationName: "space_created_by",
 	}),
 	statuses: many(statuses),
+	projects: many(projects),
+	items: many(items),
 }));
 
 export const SelectSpace = createSelectSchema(spaces, {
-	createdAt: z.coerce.date(),
-	updatedAt: z.coerce.date().nullable(),
-	deletedAt: z.coerce.date().nullable(),
+	createdAt: z.coerce.string(),
+	updatedAt: z.coerce.string().nullable(),
+	deletedAt: z.coerce.string().nullable(),
 });
 
 export const InsertSpace = createInsertSchema(spaces, {

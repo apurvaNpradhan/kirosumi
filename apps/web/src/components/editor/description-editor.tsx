@@ -41,7 +41,7 @@ import {
 } from "@/components/editor";
 
 interface Props {
-	content: JSONContent;
+	content?: JSONContent;
 	onChange: (content: JSONContent) => void;
 }
 

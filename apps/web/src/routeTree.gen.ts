@@ -14,8 +14,10 @@ import { Route as authenticatedRouteRouteImport } from './routes/(authenticated)
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as authenticatedDashboardRouteImport } from './routes/(authenticated)/dashboard'
 import { Route as authenticatedSpacesIndexRouteImport } from './routes/(authenticated)/spaces/index'
+import { Route as authenticatedScratchpadIndexRouteImport } from './routes/(authenticated)/scratchpad/index'
 import { Route as authenticatedInboxIndexRouteImport } from './routes/(authenticated)/inbox/index'
 import { Route as authenticatedCaptureIndexRouteImport } from './routes/(authenticated)/capture/index'
+import { Route as authenticatedSpacesIdRouteImport } from './routes/(authenticated)/spaces/$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -42,6 +44,12 @@ const authenticatedSpacesIndexRoute =
     path: '/spaces/',
     getParentRoute: () => authenticatedRouteRoute,
   } as any)
+const authenticatedScratchpadIndexRoute =
+  authenticatedScratchpadIndexRouteImport.update({
+    id: '/scratchpad/',
+    path: '/scratchpad/',
+    getParentRoute: () => authenticatedRouteRoute,
+  } as any)
 const authenticatedInboxIndexRoute = authenticatedInboxIndexRouteImport.update({
   id: '/inbox/',
   path: '/inbox/',
@@ -53,21 +61,30 @@ const authenticatedCaptureIndexRoute =
     path: '/capture/',
     getParentRoute: () => authenticatedRouteRoute,
   } as any)
+const authenticatedSpacesIdRoute = authenticatedSpacesIdRouteImport.update({
+  id: '/spaces/$id',
+  path: '/spaces/$id',
+  getParentRoute: () => authenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof authenticatedDashboardRoute
+  '/spaces/$id': typeof authenticatedSpacesIdRoute
   '/capture': typeof authenticatedCaptureIndexRoute
   '/inbox': typeof authenticatedInboxIndexRoute
+  '/scratchpad': typeof authenticatedScratchpadIndexRoute
   '/spaces': typeof authenticatedSpacesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof authenticatedDashboardRoute
+  '/spaces/$id': typeof authenticatedSpacesIdRoute
   '/capture': typeof authenticatedCaptureIndexRoute
   '/inbox': typeof authenticatedInboxIndexRoute
+  '/scratchpad': typeof authenticatedScratchpadIndexRoute
   '/spaces': typeof authenticatedSpacesIndexRoute
 }
 export interface FileRoutesById {
@@ -76,23 +93,43 @@ export interface FileRoutesById {
   '/(authenticated)': typeof authenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/(authenticated)/dashboard': typeof authenticatedDashboardRoute
+  '/(authenticated)/spaces/$id': typeof authenticatedSpacesIdRoute
   '/(authenticated)/capture/': typeof authenticatedCaptureIndexRoute
   '/(authenticated)/inbox/': typeof authenticatedInboxIndexRoute
+  '/(authenticated)/scratchpad/': typeof authenticatedScratchpadIndexRoute
   '/(authenticated)/spaces/': typeof authenticatedSpacesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/capture' | '/inbox' | '/spaces'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/spaces/$id'
+    | '/capture'
+    | '/inbox'
+    | '/scratchpad'
+    | '/spaces'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/capture' | '/inbox' | '/spaces'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/spaces/$id'
+    | '/capture'
+    | '/inbox'
+    | '/scratchpad'
+    | '/spaces'
   id:
     | '__root__'
     | '/'
     | '/(authenticated)'
     | '/login'
     | '/(authenticated)/dashboard'
+    | '/(authenticated)/spaces/$id'
     | '/(authenticated)/capture/'
     | '/(authenticated)/inbox/'
+    | '/(authenticated)/scratchpad/'
     | '/(authenticated)/spaces/'
   fileRoutesById: FileRoutesById
 }
@@ -139,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authenticatedSpacesIndexRouteImport
       parentRoute: typeof authenticatedRouteRoute
     }
+    '/(authenticated)/scratchpad/': {
+      id: '/(authenticated)/scratchpad/'
+      path: '/scratchpad'
+      fullPath: '/scratchpad'
+      preLoaderRoute: typeof authenticatedScratchpadIndexRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
     '/(authenticated)/inbox/': {
       id: '/(authenticated)/inbox/'
       path: '/inbox'
@@ -153,20 +197,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authenticatedCaptureIndexRouteImport
       parentRoute: typeof authenticatedRouteRoute
     }
+    '/(authenticated)/spaces/$id': {
+      id: '/(authenticated)/spaces/$id'
+      path: '/spaces/$id'
+      fullPath: '/spaces/$id'
+      preLoaderRoute: typeof authenticatedSpacesIdRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
   }
 }
 
 interface authenticatedRouteRouteChildren {
   authenticatedDashboardRoute: typeof authenticatedDashboardRoute
+  authenticatedSpacesIdRoute: typeof authenticatedSpacesIdRoute
   authenticatedCaptureIndexRoute: typeof authenticatedCaptureIndexRoute
   authenticatedInboxIndexRoute: typeof authenticatedInboxIndexRoute
+  authenticatedScratchpadIndexRoute: typeof authenticatedScratchpadIndexRoute
   authenticatedSpacesIndexRoute: typeof authenticatedSpacesIndexRoute
 }
 
 const authenticatedRouteRouteChildren: authenticatedRouteRouteChildren = {
   authenticatedDashboardRoute: authenticatedDashboardRoute,
+  authenticatedSpacesIdRoute: authenticatedSpacesIdRoute,
   authenticatedCaptureIndexRoute: authenticatedCaptureIndexRoute,
   authenticatedInboxIndexRoute: authenticatedInboxIndexRoute,
+  authenticatedScratchpadIndexRoute: authenticatedScratchpadIndexRoute,
   authenticatedSpacesIndexRoute: authenticatedSpacesIndexRoute,
 }
 

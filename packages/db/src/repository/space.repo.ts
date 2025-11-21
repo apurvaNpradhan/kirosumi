@@ -1,15 +1,24 @@
 import { publicIds } from "@kirosumi/shared";
 import { and, desc, eq, isNull } from "drizzle-orm";
+import type { Json } from "drizzle-zod";
 import { db } from "..";
-import { type InsertStatus, statuses } from "../schema";
+import {
+	type InsertProject,
+	type InsertStatus,
+	items,
+	projects,
+	statuses,
+} from "../schema";
 import { type InsertSpace, spaces, type UpdateSpace } from "../schema/space";
 
+const DefaultProject = {
+	name: "My First Project",
+	description: null satisfies Json | null,
+} as InsertProject;
 const DefaultSpace = {
-	name: "Inbox",
+	name: "Personal",
 	isDefault: true,
-	isSystem: true,
 } as InsertSpace;
-
 export const createDefaultSpaces = async (userId: string) => {
 	return await db.transaction(async (tx) => {
 		const [space] = await tx
@@ -58,7 +67,43 @@ export const getDefaultSpace = async (userId: string) => {
 			isNull(spaces.deletedAt),
 		),
 		with: {
-			statuses: true,
+			statuses: {
+				columns: {
+					color: true,
+					name: true,
+					type: true,
+					publicId: true,
+					createdAt: true,
+					deletedAt: true,
+					updatedAt: true,
+				},
+			},
+			items: {
+				columns: {
+					publicId: true,
+					content: true,
+					name: true,
+					createdAt: true,
+					kind: true,
+					updatedAt: true,
+				},
+				with: {
+					status: {
+						columns: {
+							publicId: true,
+							name: true,
+							type: true,
+							color: true,
+							createdAt: true,
+							deletedAt: true,
+							updatedAt: true,
+						},
+					},
+				},
+			},
+		},
+		columns: {
+			publicId: true,
 		},
 	});
 
@@ -70,7 +115,7 @@ export const getAll = async (args: { userId: string }) => {
 		where: and(
 			eq(spaces.userId, args.userId),
 			isNull(spaces.deletedAt),
-			isNull(spaces.isDefault),
+			// eq(spaces.isDefault, false),
 		),
 		orderBy: desc(spaces.createdAt),
 	});
@@ -85,6 +130,10 @@ export const getById = async (id: number, userId: string) => {
 			eq(spaces.userId, userId),
 			isNull(spaces.deletedAt),
 		),
+		with: {
+			projects: true,
+			statuses: true,
+		},
 	});
 
 	return result ?? null;
@@ -97,6 +146,24 @@ export const getByPublicId = async (publicId: string, userId: string) => {
 			eq(spaces.userId, userId),
 			isNull(spaces.deletedAt),
 		),
+		with: {
+			projects: {
+				with: {
+					items: {
+						with: {
+							status: true,
+						},
+					},
+				},
+			},
+			items: {
+				with: {
+					status: true,
+				},
+				where: and(isNull(items.projectId)),
+			},
+			statuses: true,
+		},
 	});
 
 	return result ?? null;

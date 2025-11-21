@@ -7,8 +7,15 @@ import { protectedProcedure, router } from "..";
 
 export const spaceRouter = router({
 	creatDefaultSpace: protectedProcedure.mutation(async ({ ctx }) => {
-		const userId = ctx.session.user.id;
-		return spacesRepo.createDefaultSpaces(userId);
+		try {
+			const userId = ctx.session.user.id;
+			return spacesRepo.createDefaultSpaces(userId);
+		} catch (e) {
+			throw new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: `${e}`,
+			});
+		}
 	}),
 	all: protectedProcedure.query(async ({ ctx }) => {
 		const spaces = await spacesRepo.getAll({ userId: ctx.session.user.id });

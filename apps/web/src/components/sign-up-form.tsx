@@ -35,9 +35,14 @@ export default function SignUpForm({
 				{
 					onSuccess: async (_user) => {
 						try {
-							await trpc.space.creatDefaultSpace.mutate();
+							const space = await trpc.space.creatDefaultSpace.mutate();
 							toast.success("Welcome! Your space is ready 🎉");
-							navigate({ to: "/inbox" });
+							navigate({
+								to: "/spaces/$id",
+								params: {
+									id: space.publicId,
+								},
+							});
 						} catch (error: any) {
 							toast.error(
 								"Almost there! Failed to set up your workspace. Please try again.",

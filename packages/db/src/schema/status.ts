@@ -7,6 +7,7 @@ import {
 } from "drizzle-zod";
 import { z } from "zod";
 import { timestamps } from "../utils/reusable";
+import { items } from "./item";
 import { spaces } from "./space";
 
 export const statuses = pgTable(
@@ -29,12 +30,13 @@ export const statuses = pgTable(
 	}),
 );
 
-export const statusesRelations = relations(statuses, ({ one }) => ({
+export const statusesRelations = relations(statuses, ({ one, many }) => ({
 	space: one(spaces, {
 		fields: [statuses.spaceId],
 		references: [spaces.id],
 		relationName: "status_space",
 	}),
+	items: many(items),
 }));
 
 export const statusTypeEnum = z
